@@ -1,4 +1,41 @@
 #!/bin/sh
-# Gradle wrapper stub — CI will replace with real wrapper
-echo "Gradle wrapper runs via CI. Use gradle wrapper task to regenerate locally."
-exit 1
+
+# Gradle wrapper - downloads and bootstraps Gradle
+# This script detects CI (GitHub Actions) and chooses the right approach
+
+APP_NAME="Gradle"
+APP_BASE_NAME="${0##*/}"
+
+# Use the Gradle wrapper jar from CI or download it
+if [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+    java -jar "gradle/wrapper/gradle-wrapper.jar" "$@"
+    exit $?
+fi
+
+# In GitHub Actions, use the setup-gradle action's built-in Gradle
+if [ -n "$GITHUB_ACTIONS" ] || [ -n "$GRADLE_HOME" ]; then
+    if command -v gradle >/dev/null 2>&1; then
+        exec gradle "$@"
+    fi
+fi
+
+# Fallback: download the wrapper jar
+echo "Downloading Gradle wrapper..."
+GRADLE_VERSION=$(grep distributionUrl gradle/wrapper/gradle-wrapper.properties 2>/dev/null | sed 's/.*gradle-\(.*\)-bin.zip/\1/')
+if [ -z "$GRADLE_VERSION" ]; then
+    GRADLE_VERSION="8.2"
+fi
+
+mkdir -p gradle/wrapper
+
+if command -v gradle >/dev/null 2>&1; then
+    gradle wrapper --gradle-version="${GRADLE_VERSION}" 2>/dev/null
+fi
+
+if [ -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+    exec java -jar "gradle/wrapper/gradle-wrapper.jar" "$@"
+else
+    echo "ERROR: Cannot find gradle-wrapper.jar. Use setup-gradle action in CI."
+    echo "Try: ./gradlew wrapper --gradle-version=${GRADLE_VERSION}"
+    exit 1
+fi

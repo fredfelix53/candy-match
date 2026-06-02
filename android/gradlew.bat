@@ -1,4 +1,7 @@
-@rem Gradle wrapper stub — CI regenerates
 @echo off
-echo Gradle wrapper runs via CI. Use gradle wrapper task to regenerate locally.
+if exist "%CD%\gradle\wrapper\gradle-wrapper.jar" (
+    java -jar "%CD%\gradle\wrapper\gradle-wrapper.jar" %*
+    exit /b %errorlevel%
+)
+echo Wrapper JAR not found. Use setup-gradle action in CI.
 exit /b 1

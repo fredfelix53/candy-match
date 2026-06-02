@@ -226,7 +226,7 @@
     // Claim button (only show if not claimed today)
     if (!state.dailyRewardClaimed) {
       const rewardDef = config.dailyRewards[state.dailyRewardDayIndex];
-      html += '<button class="game-btn" style="margin:12px auto 0;display:block;padding:10px 30px;font-size:16px;background:linear-gradient(135deg,#ff9800,#f44336);" onclick="RetentionSystem.claimDailyReward();this.closest(\'.retention-panel\').querySelector(\'.claim-btn-cont\').innerHTML=\'<div style=\\'text-align:center;color:#4caf50;font-weight:700;\\'>✅ Claimed!</div>\';this.remove()">🎁 Claim ' + (rewardDef ? rewardDef.label : 'Reward') + '</button>';
+      html += '<button class="game-btn" style="margin:12px auto 0;display:block;padding:10px 30px;font-size:16px;background:linear-gradient(135deg,#ff9800,#f44336);" onclick="RetentionSystem.claimDailyRewardAndRefresh(this)">🎁 Claim ' + (rewardDef ? rewardDef.label : 'Reward') + '</button>';
     } else {
       html += '<div style="text-align:center;padding:10px;color:#4caf50;font-weight:700;">✅ Today\'s reward claimed!</div>';
     }
@@ -273,6 +273,15 @@
     requestNotificationPermission,
     buildDailyRewardsHTML,
     showDailyRewardsModal,
+    claimDailyRewardAndRefresh: function(btn) {
+      const result = claimDailyReward();
+      if (btn) {
+        const panel = btn.closest('.retention-panel');
+        if (panel) {
+          panel.innerHTML = buildDailyRewardsHTML();
+        }
+      }
+    },
     getState: () => ({
       streak: state.streak,
       dailyRewardClaimed: state.dailyRewardClaimed,
