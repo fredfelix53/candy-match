@@ -29,7 +29,21 @@ jobs:
           gradle wrapper --gradle-version=8.2
           chmod +x gradlew
 
+      - name: Generate Keystore
+        run: |
+          keytool -genkey -v -keystore /tmp/keystore.jks \
+            -alias gamekey -keyalg RSA -keysize 2048 \
+            -validity 10000 \
+            -storepass '${{ secrets.KEYSTORE_PASSWORD || 'android' }}' \
+            -keypass '${{ secrets.KEY_PASSWORD || 'android' }}' \
+            -dname "CN=Fred Felix, OU=GameDev, O=KriStof3r, L=City, ST=State, C=IT"
+
       - name: Build Release APK
+        env:
+          KEYSTORE_PATH: /tmp/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'android' }}
+          KEY_ALIAS: gamekey
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'android' }}
         run: |
           cd android
           ./gradlew assembleRelease
@@ -39,4 +53,4 @@ jobs:
         with:
           name: game-apk
           path: android/app/build/outputs/apk/release/*.apk
-          if-no-files-found: warn
+          if-no-files-found: error
