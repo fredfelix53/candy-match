@@ -1,13 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
+    bundle {
+        language.enableSplit = false
+        density.enableSplit = true
+        abi.enableSplit = true
+    }
+
     namespace 'com.candymatch.game'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId 'com.candymatch.game'
         minSdk 21
-        targetSdk 34
+        vectorDrawables.useSupportLibrary = true
+        targetSdk 35
         versionCode 1
         versionName '1.0.0'
     }
@@ -24,7 +31,7 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
