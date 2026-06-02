@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
         
-        webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("file:///android_asset/game/index.html");
     }
 
     @Override
