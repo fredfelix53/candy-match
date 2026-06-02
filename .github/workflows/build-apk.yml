@@ -36,9 +36,9 @@ jobs:
       - name: Build Release APK + AAB
         env:
           KEYSTORE_PATH: /tmp/keystore.p12
-          KEYSTORE_PASSWORD: *** secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: *** secrets.KEY_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           cd android
           ./gradlew assembleRelease bundleRelease
