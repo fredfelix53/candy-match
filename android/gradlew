@@ -1,0 +1,4 @@
+#!/bin/sh
+# Gradle wrapper stub — CI will replace with real wrapper
+echo "Gradle wrapper runs via CI. Use gradle wrapper task to regenerate locally."
+exit 1
